@@ -10,7 +10,7 @@ object BatchWCScalaApp {
     val env = ExecutionEnvironment.getExecutionEnvironment
 
     // 2 获取数据源
-    val input = "file:///Users/sunweiye/tem/flink/input"
+    val input = "file:///Users/bytedance/test.txt"
     val text = env.readTextFile(input)
     text.print()
 
@@ -19,7 +19,7 @@ object BatchWCScalaApp {
     text.flatMap(_.toLowerCase.split("\t"))   // _ 下换线代表传进来内容
       .filter(_.nonEmpty)
       .map((_,1))
-      .groupBy(0)   // 按照 map 的第一噶参数来归类
+      .groupBy(0)   // 按照 map 的第一个参数来归类
       .sum(1).print()   // 将第二个参数来相加
   }
 

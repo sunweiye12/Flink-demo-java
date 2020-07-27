@@ -17,7 +17,7 @@ public class _02自定义Key {
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
         // 2.读取数据
-        String input = "file:///Users/sunweiye/tem/flink/input";   // 下面的 hello.txt *file://
+        String input = "file:///Users/bytedance/test.txt";   // 下面的 hello.txt *file://
         DataSource<String> text = env.readTextFile(input);
 
         // 3.数据处理  (开发核心)

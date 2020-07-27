@@ -17,7 +17,7 @@ public class _01读取外部参数 {
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
         // 2.读取数据
-            //String input = "file:///Users/sunweiye/tem/flink/input";   // (此处为文件夹目录,读取的是下面的 hello.txt)在根目录前加上 file://
+            //String input = "file:///Users/bytedance/test.txt";   // (此处为文件夹目录,读取的是下面的 hello.txt)在根目录前加上 file://
         String input;
         // 通过 Parameter 来获取参数,其中参数在运行时设置(--key value 的形式)
         ParameterTool tool = ParameterTool.fromArgs(args);
@@ -26,7 +26,7 @@ public class _01读取外部参数 {
             input = tool.get("input");
         } catch (Exception e) {
             System.err.println("获取 input 参数失败已经自动赋值默认参数");
-            input = "file:///Users/sunweiye/tem/flink/input";
+            input = "file:///Users/bytedance/test.txt";
         }
 
         DataSource<String> text = env.readTextFile(input);       // 根据输入开获得一个输入集
