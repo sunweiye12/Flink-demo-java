@@ -29,16 +29,18 @@ public class BatchWCJavaApp {
         text.flatMap(new FlatMapFunction<String, Tuple2<String,Integer>>() {
             @Override
             public void flatMap(String text, Collector<Tuple2<String, Integer>> collector) throws Exception {
-                // 将读取的数据按招分隔符来进行切割
+                // 将读取的数据按照分隔符来进行切割
                 String[] tokens = text.toLowerCase().split("\t");
-                // 将每一个单词形成一个Tuple加上他们的次数1
+                // 将每一个单词形成一个Tuple加上他们的次数 1
                 for (String token:tokens) {
                     if (token.length() > 0) {
                         collector.collect(new Tuple2<String,Integer>(token,1));
                     }
                 }
             }
-        }).groupBy(0).sum(1).print();
+        }).groupBy(0)       // 以第一个字段作为分组
+                .sum(1)         // 对第二个字段做相加处理
+                .print();
 
         // 4.执行程序
         // env.execute("Flink Batch Java API Skeleton");

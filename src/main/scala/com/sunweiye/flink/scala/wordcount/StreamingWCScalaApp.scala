@@ -16,14 +16,14 @@ object StreamingWCScalaApp {
 
     // 3 对数据进行处理
     // TODO... 几行代码的含义(隐式转换,面试的重点)
-    source.flatMap(_.toLowerCase.split(","))   // _ 下换线代表传进来内容
+    source.flatMap(_.toLowerCase.split(" "))   // _ 下换线代表传进来内容
       .filter(_.nonEmpty)
-      .map((_,1))
-      .keyBy(0)   // 按照 map 的第一噶参数来归类
-      .timeWindow(Time.seconds(5))
+      .map((_,1))        // 进行可以一个mapfunction操作
+      .keyBy(0)   // 按照 map 的第一个参数来归类
+      .timeWindow(Time.seconds(1))
       .sum(1)   // 将第二个参数来相加
       .print()
-      .setParallelism(1)
+      //.setParallelism(1)          // 设置执行的并行度
 
     env.execute("StreamingWCScalaApp")
   }
