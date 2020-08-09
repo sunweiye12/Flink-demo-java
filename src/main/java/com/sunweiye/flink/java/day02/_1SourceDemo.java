@@ -15,7 +15,8 @@ public class _1SourceDemo {
         // 获取样例数据一般在测试的时候会用
         DataStreamSource<Integer> nums = env.fromElements(1, 2, 3, 4, 5, 6, 7);
         //DataStreamSource<Integer> nums1 = env.fromCollection(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
-        System.out.println("-----"+nums.getParallelism());      // 以上两个source都是单一并行度的
+        // 以上两个source都是单一并行度的
+        System.out.println("-----"+nums.getParallelism());
 
         SingleOutputStreamOperator<Integer> filtered = nums.filter(new FilterFunction<Integer>() {
             @Override

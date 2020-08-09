@@ -23,6 +23,7 @@ public class _0WordCount {
 
         // 2.通过 socket 获取实时的数据流(读取本地 9999 端口 socket 的数据)
         DataStreamSource<String> lines = env.socketTextStream("localhost",9999);
+        System.out.println("-----"+lines.getParallelism());
 
         // 3.核心操作1 (将输入的数据通过flatmap进行切除,将一个元素切分多个过着0个)
         // flatmap函数第一个参数是指输入的数据,第二个参数是输出数据的类型 ---> 将输入的String转换成0-n个String来输出
