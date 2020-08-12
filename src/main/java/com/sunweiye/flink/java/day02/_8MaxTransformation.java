@@ -1,6 +1,7 @@
 package com.sunweiye.flink.java.day02;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -16,34 +17,22 @@ public class _8MaxTransformation {
 
         DataStreamSource<String> lines = env.socketTextStream("localhost",9999);
 
-        SingleOutputStreamOperator<Tuple2<String, Integer>> wordAndOne = lines.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
+        SingleOutputStreamOperator<Tuple2<String, Integer>> wordAndNum = lines.map(new MapFunction<String, Tuple2<String, Integer>>() {
             @Override
-            public void flatMap(String text, Collector<Tuple2<String, Integer>> collector) throws Exception {
-                String[] words = text.toLowerCase().split(" ");
-                for (String word : words) {
-                    collector.collect(Tuple2.of(word, 1));
-                }
+            public Tuple2<String, Integer> map(String s) throws Exception {
+                String[] val = s.split(",");
+                String key = val[0];
+                int num = Integer.parseInt(val[1]);
+                return Tuple2.of(key,num);
             }
         });
 
-        KeyedStream<Tuple2<String, Integer>, Tuple> keyed = wordAndOne.keyBy(0);
+        KeyedStream<Tuple2<String, Integer>, Tuple> keyed = wordAndNum.keyBy(0);
 
-        // 自己创建一个 reduce 函数来对分组后的结果操作
-        SingleOutputStreamOperator<Tuple2<String, Integer>> sumed = keyed.reduce(new ReduceFunction<Tuple2<String, Integer>>() {
-            @Override
-            public Tuple2<String, Integer> reduce(Tuple2<String, Integer> t0, Tuple2<String, Integer> t1) throws Exception {
-                // 次数获取 t0 和 t1 的第一个参数都是相同的,因为分组后第一个参数相同
-//                String key = t0.f0;
-//                int count1 = t0.f1;
-//                int count2 = t1.f1;
-//                int count = count1 + count2;
-//                return Tuple2.of(key,count);
-                t0.f1 = t0.f1 + t1.f1;
-                return t0;
-            }
-        });
+        // 获取分组后的做大值(每一次输入都会输出这组的最大值)
+        SingleOutputStreamOperator<Tuple2<String, Integer>> maxed = keyed.max(1);
 
-        sumed.print();
+        maxed.print();
 
         // 5 启动程序
         env.execute("WordCunt");
